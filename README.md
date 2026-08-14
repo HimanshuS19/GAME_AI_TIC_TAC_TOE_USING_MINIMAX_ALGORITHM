@@ -10,7 +10,7 @@ An advanced Tic-Tac-Toe Artificial Intelligence project featuring an **unbeatabl
 
 ## 📸 Web Interface Showcase
 
-![Nexus Tic-Tac-Toe AI Interface](assets\screenshot.png)
+![Nexus Tic-Tac-Toe AI Interface](assets/screenshot.png)
 
 *The Nexus Tic-Tac-Toe Web App interface featuring real-time AI move heatmaps, dark glassmorphism design, move history logging, and live game mode switching.*
 
