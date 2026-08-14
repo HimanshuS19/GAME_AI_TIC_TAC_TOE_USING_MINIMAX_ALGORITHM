@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Tic-Tac-Toe AI | Unbeatable Minimax & AI Heatmap</title>
+    <meta name="description" content="An advanced Tic-Tac-Toe AI interface powered by Minimax algorithm, featuring real-time AI move heatmaps, simulation modes, and cyberpunk glassmorphism design.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background-glow"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <h1>NEXUS <span class="accent-text">TIC-TAC-TOE AI</span></h1>
+            </div>
+            <div class="header-controls">
+                <button id="soundToggleBtn" class="icon-btn" title="Toggle Sound">
+                    <span class="btn-icon" id="soundIcon">🔊</span>
+                </button>
+                <button id="heatmapToggleBtn" class="icon-btn active" title="Toggle AI Evaluation Heatmap">
+                    <span class="btn-icon">🧠</span>
+                    <span class="btn-label">AI Heatmap</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <main class="game-layout">
+            <!-- Left Sidebar / Game Settings & Stats -->
+            <aside class="sidebar-panel glass-card">
+                <h2 class="panel-title">Game Mode</h2>
+                <div class="mode-selector">
+                    <button class="mode-btn active" data-mode="hv-minimax">
+                        <span class="mode-icon">🤖</span>
+                        <div class="mode-info">
+                            <span class="mode-name">Human vs Minimax</span>
+                            <span class="mode-desc">Unbeatable AI (Optimal)</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-mode="hv-random">
+                        <span class="mode-icon">🎲</span>
+                        <div class="mode-info">
+                            <span class="mode-name">Human vs Random</span>
+                            <span class="mode-desc">Casual / Easy AI</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-mode="hv-medium">
+                        <span class="mode-icon">🧠</span>
+                        <div class="mode-info">
+                            <span class="mode-name">Human vs Smart AI</span>
+                            <span class="mode-desc">Balanced Challenge</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-mode="hvh">
+                        <span class="mode-icon">👥</span>
+                        <div class="mode-info">
+                            <span class="mode-name">Human vs Human</span>
+                            <span class="mode-desc">Pass & Play</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-mode="ai-vs-ai">
+                        <span class="mode-icon">⚔️</span>
+                        <div class="mode-info">
+                            <span class="mode-name">AI vs AI Simulation</span>
+                            <span class="mode-desc">Watch AI Battle</span>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- First Move Option -->
+                <div class="option-group">
+                    <label class="option-label">Player Plays As:</label>
+                    <div class="segmented-control">
+                        <button class="segment-btn active" id="playAsX">Player X (First)</button>
+                        <button class="segment-btn" id="playAsO">Player O (Second)</button>
+                    </div>
+                </div>
+
+                <!-- Simulation Speed (For AI vs AI) -->
+                <div class="option-group hidden" id="simSpeedGroup">
+                    <label class="option-label">Simulation Delay: <span id="speedValue">600ms</span></label>
+                    <input type="range" id="simSpeedSlider" min="100" max="1500" step="100" value="600">
+                </div>
+
+                <!-- Scoreboard -->
+                <div class="stats-card">
+                    <h3 class="stats-title">Scoreboard</h3>
+                    <div class="stats-grid">
+                        <div class="stat-box player-x">
+                            <span class="stat-label" id="labelX">Player X</span>
+                            <span class="stat-val" id="scoreX">0</span>
+                        </div>
+                        <div class="stat-box ties">
+                            <span class="stat-label">Draws</span>
+                            <span class="stat-val" id="scoreTies">0</span>
+                        </div>
+                        <div class="stat-box player-o">
+                            <span class="stat-label" id="labelO">Player O</span>
+                            <span class="stat-val" id="scoreO">0</span>
+                        </div>
+                    </div>
+                    <div class="streak-badge">
+                        <span class="streak-icon">🔥</span>
+                        <span id="streakText">Streak: 0</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Stage / Game Board -->
+            <section class="board-stage glass-card">
+                <!-- Status Banner -->
+                <div class="status-banner" id="statusBanner">
+                    <span class="status-indicator player-x-turn"></span>
+                    <span class="status-text" id="statusText">Player X's Turn</span>
+                </div>
+
+                <!-- 3x3 Grid -->
+                <div class="board-container">
+                    <div class="board-grid" id="boardGrid">
+                        <div class="cell" data-index="0" id="cell-0">
+                            <span class="cell-content"></span>
+                            <span class="heatmap-score"></span>
+                        </div>
+                        <div class="cell" data-index="1" id="cell-1">
+                            <span class="cell-content"></span>
+                            <span class="heatmap-score"></span>
+                        </div>
+                        <div class="cell" data-index="2" id="cell-2">
+                            <span class="cell-content"></span>
+                            <span class="heatmap-score"></span>
+                        </div>
+                        <div class="cell" data-index="3" id="cell-3">
+                            <span class="cell-content"></span>
+                            <span class="heatmap-score"></span>
+                        </div>
+                        <div class="cell" data-index="4" id="cell-4">
+                            <span class="cell-content"></span>
+                            <span class="heatmap-score"></span>
+                        </div>
+                        <div class="cell" data-index="5" id="cell-5">
+                            <span class="cell-content"></span>
+                            <span class="heatmap-score"></span>
+                        </div>
+                        <div class="cell" data-index="6" id="cell-6">
+                            <span class="cell-content"></span>
+                            <span class="heatmap-score"></span>
+                        </div>
+                        <div class="cell" data-index="7" id="cell-7">
+                            <span class="cell-content"></span>
+                            <span class="heatmap-score"></span>
+                        </div>
+                        <div class="cell" data-index="8" id="cell-8">
+                            <span class="cell-content"></span>
+                            <span class="heatmap-score"></span>
+                        </div>
+                    </div>
+                    <!-- Win SVG Line Overlay -->
+                    <svg class="win-line-svg" id="winLineSvg" viewBox="0 0 300 300">
+                        <line id="winLine" x1="0" y1="0" x2="0" y2="0" stroke="url(#winGradient)" stroke-width="8" stroke-linecap="round" />
+                        <defs>
+                            <linearGradient id="winGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00F2FE" />
+                                <stop offset="100%" stop-color="#4FACFE" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+
+                <!-- Action Controls -->
+                <div class="board-actions">
+                    <button class="action-btn secondary-btn" id="undoBtn" disabled>
+                        <span>↩️ Undo Move</span>
+                    </button>
+                    <button class="action-btn primary-btn" id="restartBtn">
+                        <span>🔄 New Game</span>
+                    </button>
+                    <button class="action-btn secondary-btn" id="resetStatsBtn">
+                        <span>📊 Reset Stats</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Right Sidebar / History & AI Insights -->
+            <aside class="sidebar-panel glass-card">
+                <h2 class="panel-title">AI Engine & History</h2>
+                
+                <!-- AI Insight Card -->
+                <div class="ai-insight-box">
+                    <div class="ai-insight-header">
+                        <span class="ai-chip">Minimax v1.0</span>
+                        <span class="ai-status-pulse" id="aiPulse"></span>
+                    </div>
+                    <p class="ai-insight-text" id="aiInsightText">
+                        Select a move. Minimax analyzes all potential game trees to ensure optimal defense and offense.
+                    </p>
+                    <div class="depth-meter">
+                        <span class="meter-label">Tree Depth Evaluated:</span>
+                        <span class="meter-val" id="treeDepthVal">N/A</span>
+                    </div>
+                </div>
+
+                <!-- Move History Log -->
+                <div class="history-panel">
+                    <h3 class="history-title">Move Log</h3>
+                    <ul class="history-list" id="historyList">
+                        <li class="history-empty">No moves yet. Start playing!</li>
+                    </ul>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Powered by <strong>Minimax Decision Tree Algorithm</strong> | Himanshu Singh | AI Suite</p>
+        </footer>
+    </div>
+
+    <!-- Win Modal Popup -->
+    <div class="modal-overlay" id="winModal">
+        <div class="modal-card glass-card">
+            <div class="modal-icon" id="modalIcon">🏆</div>
+            <h2 class="modal-title" id="modalTitle">Victory!</h2>
+            <p class="modal-sub" id="modalSub">Player X dominated the match.</p>
+            <div class="modal-buttons">
+                <button class="action-btn primary-btn" id="modalPlayAgainBtn">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
